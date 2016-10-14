@@ -937,7 +937,7 @@ new Jetpack_JSON_API_Cron_Post_Endpoint( array(
 		'$site' => '(int|string) The site ID, The site domain'
 	),
 	'request_format' => array(
-		'hooks'             => '(array) List of hooks to run if they have been scheduled',
+		'hooks'       => '(array) List of hooks to run if they have been scheduled',
 	),
 	'response_format' => array(
 		'success' => '(array) Of processed hooks with their arguments'

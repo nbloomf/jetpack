@@ -21,7 +21,7 @@ class Jetpack_JSON_API_Cron_Endpoint extends Jetpack_JSON_API_Endpoint {
 
 	protected function resolve_arguments() {
 		$args = $this->input();
-		return  ! isset( $args['arguments'] ) ? array() : json_decode( $args['arguments'] );
+		return  isset( $args['arguments'] ) ? json_decode( $args['arguments'] ) : array();
 	}
 
 	protected function is_cron_locked( $gmt_time ) {
@@ -45,8 +45,22 @@ class Jetpack_JSON_API_Cron_Endpoint extends Jetpack_JSON_API_Endpoint {
 		return $lock;
 	}
 
+	protected function get_schedules( $hook, $args ) {
+		$crons = _get_cron_array();
+		$key = md5(serialize($args));
+		if ( empty( $crons ) )
+			return array();
+		$found = array();
+		foreach ( $crons as $timestamp => $cron ) {
+			if ( isset( $cron[$hook][$key] ) )
+				return $found;
+		}
+
+		return $found;
+	}
+
 	/**
-	 * This function is based on the one found in wp-cron.php with a simular name
+	 * This function is based on the one found in wp-cron.php with a similar name
 	 * @return int
 	 */
 	protected function get_cron_lock() {
@@ -73,19 +87,19 @@ class Jetpack_JSON_API_Cron_Endpoint extends Jetpack_JSON_API_Endpoint {
 class Jetpack_JSON_API_Cron_Post_Endpoint extends Jetpack_JSON_API_Cron_Endpoint {
 
 	protected function result() {
-		define('DOING_CRON', true);
-
+		define( 'DOING_CRON', true );
+		set_time_limit( 0 );
 		$args = $this->input();
 
 		if ( false === $crons = _get_cron_array() ) {
-			return new WP_Error( 'no-cron-event', 'Current there are no cron events' );
+			return new WP_Error( 'no-cron-event', 'Currently there are no cron events' );
 		}
 
 		$keys = array_keys( $crons );
 		$gmt_time = microtime( true );
 
-		if ( isset($keys[0]) && $keys[0] > $gmt_time ) {
-			return new WP_Error( 'no-cron-event', 'Current there are no cron events ready to be run' );
+		if ( isset( $keys[0] ) && $keys[0] > $gmt_time ) {
+			return new WP_Error( 'no-cron-event', 'Currently there are no cron events ready to be run' );
 		}
 
 		$locked = $this->is_cron_locked( $gmt_time );
@@ -119,6 +133,7 @@ class Jetpack_JSON_API_Cron_Post_Endpoint extends Jetpack_JSON_API_Cron_Endpoint
 
 					do_action_ref_array( $hook, $arguments );
 					$processed_events[] = array( $hook => $arguments );
+
 					// If the hook ran too long and another cron process stole the lock,
 					// or if we things are taking longer then 20 seconds then quit.
 					if ( ( $this->get_cron_lock() != $lock ) || ( $gmt_time + 20 > microtime( true ) ) ) {
@@ -160,28 +175,32 @@ class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Endp
 		}
 
 		$arguments = $this->resolve_arguments();
+		$next_scheduled = $this->get_schedules( $hook, $arguments, $args['timestamp'] );
 
-		if ( wp_next_scheduled( $hook, $arguments ) ) {
-			return new WP_Error( 'event-already-scheduled', 'This event is ready scheduled' );
-		}
+		if ( isset( $args['recurrence'] ) ) {
+			$schedules = wp_get_schedules();
+			if ( ! isset( $schedules[ $args['recurrence'] ] ) ) {
+				return new WP_Error( 'invalid-recurrence', 'Please provide a valid recurrence argument' );
+			}
 
-		if ( ! isset( $args['recurrence'] ) ) {
+			if ( count( $next_scheduled ) > 0 ) {
+				return new WP_Error( 'event-already-scheduled', 'This event is ready scheduled' );
+			}
 			$lock = $this->lock_cron();
-			wp_schedule_single_event( $args['timestamp'], $hook, $arguments );
+			wp_schedule_event( $args['timestamp'], $args['recurrence'], $hook, $arguments );
 			$this->maybe_unlock_cron( $lock );
 			return array( 'success' => true );
 		}
-		
-		$schedules = wp_get_schedules();
-		if ( ! isset( $schedules[ $args['recurrence'] ] ) ) {
-			return new WP_Error( 'invalid-recurrence', 'Please provide a valid recurrence argument' );
-		}
-		
-		$lock = $this->lock_cron();
-		wp_schedule_event( $args['timestamp'], $args['recurrence'], $hook, $arguments );
-		$this->maybe_unlock_cron( $lock );
 
-		return array( 'success' => true );
+		foreach( $next_scheduled as $scheduled_time ) {
+			if ( abs( $scheduled_time - $args['timestamp'] ) <= 10 * MINUTE_IN_SECONDS ) {
+				return new WP_Error( 'event-already-scheduled', 'This event is ready scheduled' );
+			}
+		}
+		$lock = $this->lock_cron();
+		$next = wp_schedule_single_event( $args['timestamp'], $hook, $arguments );
+		$this->maybe_unlock_cron( $lock );
+		return array( 'success' => is_null( $next  ) ? true : false );
 	}
 }
 
