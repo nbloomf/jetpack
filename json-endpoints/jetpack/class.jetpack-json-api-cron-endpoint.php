@@ -1,7 +1,7 @@
 <?php
 
 // GET /sites/%s/cron
-class Jetpack_JSON_API_Cron_Get_Endpoint extends Jetpack_JSON_API_Endpoint {
+class Jetpack_JSON_API_Cron_Endpoint extends Jetpack_JSON_API_Endpoint {
 	protected $needed_capabilities = 'manage_options';
 
 	protected function validate_call( $_blog_id, $capability, $check_manage_active = true ) {
@@ -70,7 +70,7 @@ class Jetpack_JSON_API_Cron_Get_Endpoint extends Jetpack_JSON_API_Endpoint {
 }
 
 // POST /sites/%s/cron
-class Jetpack_JSON_API_Cron_Post_Endpoint extends Jetpack_JSON_API_Cron_Get_Endpoint {
+class Jetpack_JSON_API_Cron_Post_Endpoint extends Jetpack_JSON_API_Cron_Endpoint {
 
 	protected function result() {
 		define('DOING_CRON', true);
@@ -135,9 +135,8 @@ class Jetpack_JSON_API_Cron_Post_Endpoint extends Jetpack_JSON_API_Cron_Get_Endp
 	}
 }
 
-
 // POST /sites/%s/cron/schedule
-class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Get_Endpoint {
+class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Endpoint {
 
 	protected function result() {
 		$args = $this->input();
@@ -146,7 +145,7 @@ class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Get_
 		}
 
 		if ( ! is_int( $args['timestamp'] ) || $args['timestamp'] < time() ) {
-			return new WP_Error( 'timestamp-invalid', 'Please provide timestamp argument that is an integer and larger then the current timestamp' );
+			return new WP_Error( 'timestamp-invalid', 'Please provide timestamp that is an integer and set in the future' );
 		}
 
 		if ( ! isset( $args['hook'] ) ) {
@@ -172,14 +171,12 @@ class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Get_
 			$this->maybe_unlock_cron( $lock );
 			return array( 'success' => true );
 		}
-
-		if ( ! isset( $args['recurrence'] ) ) {
-			return new WP_Error( 'missing_argument',  'Please provide the recurrence argument' );
-		}
+		
 		$schedules = wp_get_schedules();
 		if ( ! isset( $schedules[ $args['recurrence'] ] ) ) {
 			return new WP_Error( 'invalid-recurrence', 'Please provide a valid recurrence argument' );
 		}
+		
 		$lock = $this->lock_cron();
 		wp_schedule_event( $args['timestamp'], $args['recurrence'], $hook, $arguments );
 		$this->maybe_unlock_cron( $lock );
@@ -188,9 +185,8 @@ class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Get_
 	}
 }
 
-
 // POST /sites/%s/cron/unschedule
-class Jetpack_JSON_API_Cron_Unschedule_Endpoint extends Jetpack_JSON_API_Cron_Get_Endpoint {
+class Jetpack_JSON_API_Cron_Unschedule_Endpoint extends Jetpack_JSON_API_Cron_Endpoint {
 
 	protected function result() {
 		$args = $this->input();
@@ -201,10 +197,6 @@ class Jetpack_JSON_API_Cron_Unschedule_Endpoint extends Jetpack_JSON_API_Cron_Ge
 
 		$hook = $this->sanitize_hook( $args['hook'] );
 
-		if ( ! isset( $args['arguments'] ) ) {
-			$args['arguments'] = array();
-		}
-
 		$locked = $this->is_cron_locked( microtime( true ) );
 		if ( is_wp_error( $locked ) ) {
 			return $locked;
@@ -212,19 +204,17 @@ class Jetpack_JSON_API_Cron_Unschedule_Endpoint extends Jetpack_JSON_API_Cron_Ge
 
 		$crons = _get_cron_array();
 		if ( empty( $crons ) ) {
-			return new WP_Error( 'cron-not-present', 'Unable to unschedule the event, no event in the cron' );
+			return new WP_Error( 'cron-not-present', 'Unable to unschedule an event, no events in the cron' );
 		}
 
 		$arguments = $this->resolve_arguments();
-		$prevent_timestamp = wp_next_scheduled( $hook, $arguments );
-		if ( $args['timestamp'] != $prevent_timestamp ) {
-			return new WP_Error( 'not-present', 'Unable to unschedule the event, the event doesn\'t exist' );
-		}
 
-		if ( isset( $args['single'] ) && $args['single'] ) {
-			if ( ! isset( $args['timestamp'] ) ) {
-				return new WP_Error( 'missing_argument', 'Please provide the timestamp argument' );
+		if ( isset( $args['timestamp'] ) ) {
+			$prevent_timestamp = wp_next_scheduled( $hook, $arguments );
+			if ( $args['timestamp'] != $prevent_timestamp ) {
+				return new WP_Error( 'event-not-present', 'Unable to unschedule the event, the event doesn\'t exist' );
 			}
+
 			$lock = $this->lock_cron();
 			wp_unschedule_event( $args['timestamp'], $hook, $arguments );
 			$this->maybe_unlock_cron( $lock );

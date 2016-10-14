@@ -906,9 +906,9 @@ new WPCOM_JSON_API_Update_Option_Endpoint( array (
 
 require_once( $json_jetpack_endpoints_dir . 'class.jetpack-json-api-cron-endpoint.php' );
 
-
-new Jetpack_JSON_API_Cron_Get_Endpoint( array(
-	'description'     => 'Retrieves the items in the cron array',
+// GET /sites/%s/cron
+new Jetpack_JSON_API_Cron_Endpoint( array(
+	'description'     => 'Fetches the cron array',
 	'group'           => '__do_not_document',
 	'method'          => 'GET',
 	'path'            => '/sites/%s/cron',
@@ -917,12 +917,16 @@ new Jetpack_JSON_API_Cron_Get_Endpoint( array(
 		'$site' => '(int|string) The site ID, The site domain'
 	),
 	'response_format' => array(
-		'cron_array' => '(array) Data containing in the cron array',
+		'cron_array' => '(array) The cron array',
 		'current_timestamp' => '(int) Current server timestamp'
 	),
-	'example_request' => 'https://public-api.wordpress.com/rest/v1.1/sites/example.wordpress.org/cron'
+	'example_request' => 'https://public-api.wordpress.com/rest/v1.1/sites/example.wordpress.org/cron',
+	'example_request_data' => array(
+		'headers' => array( 'authorization' => 'Bearer YOUR_API_TOKEN' ),
+	),
 ) );
 
+// POST /sites/%s/cron
 new Jetpack_JSON_API_Cron_Post_Endpoint( array(
 	'description'     => 'Process items in the cron',
 	'group'           => '__do_not_document',
@@ -933,14 +937,21 @@ new Jetpack_JSON_API_Cron_Post_Endpoint( array(
 		'$site' => '(int|string) The site ID, The site domain'
 	),
 	'request_format' => array(
-		'hook'             => '(array) List of hooks to run if they have been scheduled',
+		'hooks'             => '(array) List of hooks to run if they have been scheduled',
 	),
 	'response_format' => array(
-		'success' => '(array) of processed hooks'
+		'success' => '(array) Of processed hooks with their arguments'
 	),
-	'example_request' => 'https://public-api.wordpress.com/rest/v1.1/sites/example.wordpress.org/cron'
+	'example_request' => 'https://public-api.wordpress.com/rest/v1.1/sites/example.wordpress.org/cron',
+	'example_request_data' => array(
+		'headers' => array( 'authorization' => 'Bearer YOUR_API_TOKEN' ),
+		'body' => array(
+			'hooks'   => array( 'jetpack_sync_cron' )
+		),
+	),
 ) );
 
+// POST /sites/%s/cron/schedule
 new Jetpack_JSON_API_Cron_Schedule_Endpoint( array(
 	'description'     => 'Process items in the cron',
 	'group'           => '__do_not_document',
@@ -954,14 +965,24 @@ new Jetpack_JSON_API_Cron_Schedule_Endpoint( array(
 		'hook'             => '(string) Hook name that should run when the event is scheduled',
 		'arguments'        => '(string) JSON Object of arguments that the hook will use',
 		'timestamp'        => '(int) Timestamp when the event should take place, has to be in the future',
-		'recurrence'       => '(string) How often the event should take place. Possible values hourly, twicedaily, daily'
+		'recurrence'       => '(string) How often the event should take place. Possible values 1min, hourly, twicedaily, daily'
 	),
 	'response_format' => array(
 		'success' => '(bool) Was the event scheduled?'
 	),
-	'example_request' => 'https://public-api.wordpress.com/rest/v1.1/sites/example.wordpress.org/cron/schedule'
+	'example_request' => 'https://public-api.wordpress.com/rest/v1.1/sites/example.wordpress.org/cron/schedule',
+	'example_request_data' => array(
+		'headers' => array( 'authorization' => 'Bearer YOUR_API_TOKEN' ),
+		'body' => array(
+			'hook'      => 'jetpack_sync_cron',
+			'arguments' => '[]',
+			'recurrence'=> '1min',
+			'timestamp' => 1476385523
+		),
+	),
 ) );
 
+// POST /sites/%s/cron/unschedule
 new Jetpack_JSON_API_Cron_Unschedule_Endpoint( array(
 	'description'     => 'Process items in the cron',
 	'group'           => '__do_not_document',
@@ -973,12 +994,19 @@ new Jetpack_JSON_API_Cron_Unschedule_Endpoint( array(
 	),
 	'request_format' => array(
 		'hook'             => '(string) Name of the hook that should be unscheduled',
-		'arguments'        => '(string) JSON Object of arguments that the hook will use',
-		'single'           => '(bool=true) Is it a single event that was schedules?',
-		'timestamp'        => '(int) Timestamp when the event should take place, has to be in the future'
+		'arguments'        => '(string) JSON Object of arguments that the hook has been scheduled with',
+		'timestamp'        => '(int) Timestamp of the hook that you want to unschedule. This will unschedule only 1 event.'
 	),
 	'response_format' => array(
 		'success' => '(bool) Was the event unscheduled?'
 	),
-	'example_request' => 'https://public-api.wordpress.com/rest/v1.1/sites/example.wordpress.org/cron/schedule'
+	'example_request' => 'https://public-api.wordpress.com/rest/v1.1/sites/example.wordpress.org/cron/unschedule',
+	'example_request_data' => array(
+		'headers' => array( 'authorization' => 'Bearer YOUR_API_TOKEN' ),
+		'body' => array(
+			'hook'      => 'jetpack_sync_cron',
+			'arguments' => '[]',
+			'timestamp' => 1476385523
+		),
+	),
 ) );
