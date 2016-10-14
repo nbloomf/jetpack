@@ -5470,7 +5470,7 @@ p {
 		 * Format:
 		 * deprecated_filter_name => replacement_name
 		 *
-		 * If there is no replacement us null for replacement_name
+		 * If there is no replacement, use null for replacement_name
 		 */
 		$deprecated_list = array(
 			'jetpack_bail_on_shortcode'                              => 'jetpack_shortcodes_to_include',
@@ -5492,6 +5492,7 @@ p {
 			'add_option_jetpack_is_main_network'                     => null,
 			'add_option_jetpack_main_network_site'                   => null,
 			'jetpack_sync_all_registered_options'                    => null,
+			'jetpack_is_post_mailable'                               => null,
 		);
 
 		// This is a silly loop depth. Better way?
