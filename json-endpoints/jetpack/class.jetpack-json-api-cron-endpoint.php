@@ -53,7 +53,7 @@ class Jetpack_JSON_API_Cron_Endpoint extends Jetpack_JSON_API_Endpoint {
 		$found = array();
 		foreach ( $crons as $timestamp => $cron ) {
 			if ( isset( $cron[$hook][$key] ) )
-				return $found;
+				$found[] = $timestamp;
 		}
 
 		return $found;
@@ -175,7 +175,7 @@ class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Endp
 		}
 
 		$arguments = $this->resolve_arguments();
-		$next_scheduled = $this->get_schedules( $hook, $arguments, $args['timestamp'] );
+		$next_scheduled = $this->get_schedules( $hook, $arguments );
 
 		if ( isset( $args['recurrence'] ) ) {
 			$schedules = wp_get_schedules();
@@ -229,8 +229,8 @@ class Jetpack_JSON_API_Cron_Unschedule_Endpoint extends Jetpack_JSON_API_Cron_En
 		$arguments = $this->resolve_arguments();
 
 		if ( isset( $args['timestamp'] ) ) {
-			$prevent_timestamp = wp_next_scheduled( $hook, $arguments );
-			if ( $args['timestamp'] != $prevent_timestamp ) {
+			$next_schedulded = $this->get_schedules( $hook, $arguments );
+			if ( in_array( $args['timestamp'], $next_schedulded ) ) {
 				return new WP_Error( 'event-not-present', 'Unable to unschedule the event, the event doesn\'t exist' );
 			}
 
