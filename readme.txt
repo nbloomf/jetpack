@@ -75,6 +75,15 @@ There are opportunities for developers at all levels to contribute. [Learn more 
 
 == Changelog ==
 
+= 4.4 =
+
+**Enhancements**
+
+* Admin Page: redesign Development mode banner. #5186
+
+**Bug Fixes:**
+
+
 = 4.3.2 =
 
 * Release date: October 13, 2016
