@@ -1206,24 +1206,6 @@ class Jetpack_Core_Json_Api_Endpoints {
 				);
 				break;
 
-			// Site Icon
-			case 'site-icon':
-				$options = array(
-					'site_icon_id' => array(
-						'description'        => esc_html__( 'Site Icon ID', 'jetpack' ),
-						'type'               => 'integer',
-						'default'            => 0,
-						'validate_callback'  => __CLASS__ . '::validate_posint',
-					),
-					'site_icon_url' => array(
-						'description'        => esc_html__( 'Site Icon URL', 'jetpack' ),
-						'type'               => 'string',
-						'default'            => '',
-						'sanitize_callback'  => 'esc_url',
-					),
-				);
-				break;
-
 			// Subscriptions
 			case 'subscriptions':
 				$options = array(
@@ -1885,15 +1867,6 @@ class Jetpack_Core_Json_Api_Endpoints {
 				$sharer = new Sharing_Service();
 				$options = self::split_options( $options, $sharer->get_global_options() );
 				$options['sharing_services']['current_value'] = $sharer->get_blog_services();
-				break;
-
-			case 'site-icon':
-				// Return site icon ID and URL to make it more complete.
-				$options['site_icon_id']['current_value'] = Jetpack_Options::get_option( 'site_icon_id' );
-				if ( ! function_exists( 'jetpack_site_icon_url' ) ) {
-					@include( JETPACK__PLUGIN_DIR . 'modules/site-icon/site-icon-functions.php' );
-				}
-				$options['site_icon_url']['current_value'] = jetpack_site_icon_url();
 				break;
 
 			case 'after-the-deadline':
