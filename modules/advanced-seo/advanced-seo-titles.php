@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Each title format is an array of arrays containing two values:
  *  - type
@@ -29,19 +30,29 @@
  *  Tokens are replaced with their corresponding values for current site.
  *  Empty array signals that we are not overriding the default title for particular page type.
  */
-class A8C_SEO_Title {
-	/*
-	 * Site option named used to store custom title formats.
+
+/**
+ * Class containing utility static methods for managing SEO custom title formats.
+ */
+class Advanced_SEO_Titles {
+	/**
+	 * Site option name used to store custom title formats.
+	 *
+	 * @var string
 	 */
 	const TITLE_FORMATS_OPTION = 'advanced_seo_title_formats';
 
 	/**
 	 * Retrieves custom title formats from site option.
 	 *
-	 * @return array Array of custom title formats, or empty array if option is not set.
+	 * @return array Array of custom title formats, or empty array.
 	 */
 	public static function get_custom_title_formats() {
-		return get_option( self::TITLE_FORMATS_OPTION, array() );
+		if( Advanced_SEO::is_enabled_advanced_seo() ) {
+			return get_option( self::TITLE_FORMATS_OPTION, array() );
+		}
+
+		return array();
 	}
 
 	/**
@@ -67,26 +78,26 @@ class A8C_SEO_Title {
 	 * @return string Custom title with replaced tokens or default title.
 	 */
 	public static function get_custom_title( $default_title = '' ) {
-		// Don't filter title for unsupported themes
+		// Don't filter title for unsupported themes.
 		if ( self::is_conflicted_theme() ) {
 			return $default_title;
 		}
 
 		$page_type = self::get_page_type();
 
-		// Keep default title if invalid page type is supplied
+		// Keep default title if invalid page type is supplied.
 		if ( empty( $page_type ) ) {
 			return $default_title;
 		}
 
 		$title_formats = self::get_custom_title_formats();
 
-		// Keep default title if user has not defined custom title for this page type
+		// Keep default title if user has not defined custom title for this page type.
 		if ( empty( $title_formats[ $page_type ] ) ) {
 			return $default_title;
 		}
 
-		if ( ! A8C_SEO::is_enabled_advanced_seo() ) {
+		if ( ! Advanced_SEO::is_enabled_advanced_seo() ) {
 			return $default_title;
 		}
 
@@ -142,7 +153,7 @@ class A8C_SEO_Title {
 			return 'front_page';
 		}
 
-		if ( is_category() or is_tag() ) {
+		if ( is_category() || is_tag() ) {
 			return 'groups';
 		}
 
@@ -168,30 +179,7 @@ class A8C_SEO_Title {
 	 * @return bool True if current theme sets custom title, false otherwise.
 	 */
 	public static function is_conflicted_theme() {
-		$conflicted_themes = array(
-			'premium/eight'         => true,
-			'premium/just-desserts' => true,
-			'premium/on-demand'     => true,
-			'premium/pinboard'      => true,
-			'premium/react'         => true,
-			'premium/shelf'         => true,
-			'premium/simfo'         => true,
-			'premium/standard'      => true,
-			'premium/traction'      => true,
-			'premium/designfolio'   => true,
-			'premium/gigawatt'      => true,
-			'premium/gridspace'     => true,
-			'premium/blog-simple'   => true,
-			'premium/everyday'      => true,
-			'premium/elemin'        => true,
-			'premium/basic-maths'   => true,
-			'premium/funki'         => true,
-			'pub/sidespied'         => true,
-			'pub/newsworthy'        => true,
-			'pub/hum'               => true,
-			'pub/twentyten'         => true,
-			'pub/twentyeleven'      => true,
-		);
+		$conflicted_themes = apply_filters( 'advanced_seo_custom_title_conflicted_themes', array() );
 
 		return isset( $conflicted_themes[ get_option( 'template' ) ] );
 	}
@@ -223,7 +211,7 @@ class A8C_SEO_Title {
 			}
 
 			foreach ( $format_array as $item ) {
-				if ( empty( $item['type'] ) or empty( $item['value'] ) ) {
+				if ( empty( $item['type'] ) || empty( $item['value'] ) ) {
 					return false;
 				}
 
@@ -244,10 +232,10 @@ class A8C_SEO_Title {
 	 *
 	 * @param array $new_formats Array containing new title formats.
 	 *
-	 * @return array $result Array of updated title formats.
+	 * @return array $result Array of updated title formats, or empty array if no update was performed.
 	 */
 	public static function update_title_formats( $new_formats ) {
-		// Empty array signals that custom title shouldn't be used
+		// Empty array signals that custom title shouldn't be used.
 		$empty_formats = array(
 			'front_page' => [ ],
 			'posts'      => [ ],

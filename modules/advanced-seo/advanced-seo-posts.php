@@ -1,17 +1,20 @@
 <?php
 
-class A8C_SEO_Posts {
-	/*
-	 * Name of the meta value that will be used to store post custom description.
+/**
+ * Class containing utility static methods for managing SEO custom descriptions for Posts and Pages.
+ */
+class Advanced_SEO_Posts {
+	/**
+	 * Key of the post meta value that will be used to store post custom description.
 	 */
 	const DESCRIPTION_META_KEY = 'advanced_seo_description';
 
 	/**
-	 * Build description for post SEO
+	 * Build meta description for post SEO.
 	 *
-	 * @param WP_Post $post Source of data for custom description
+	 * @param WP_Post $post Source of data for custom description.
 	 *
-	 * @return string Post description or empty string
+	 * @return string Post description or empty string.
 	 */
 	public static function get_post_description( $post ) {
 		if ( post_password_required() ) {
@@ -33,7 +36,7 @@ class A8C_SEO_Posts {
 	}
 
 	/**
-	 * Returns post's custom description if it is set and if
+	 * Returns post's custom meta description if it is set, and if
 	 * advanced SEO is enabled for current blog.
 	 *
 	 * @param WP_Post $post Source of data for custom description
@@ -47,7 +50,7 @@ class A8C_SEO_Posts {
 
 		$custom_description = get_post_meta( $post->ID, self::DESCRIPTION_META_KEY, true );
 
-		if ( empty( $custom_description ) || ! A8C_SEO::is_enabled_advanced_seo() ) {
+		if ( empty( $custom_description ) || ! Advanced_SEO::is_enabled_advanced_seo() ) {
 			return '';
 		}
 

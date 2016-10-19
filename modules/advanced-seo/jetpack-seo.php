@@ -18,10 +18,10 @@ class Jetpack_SEO {
 
 		if ( apply_filters( 'jetpack_seo_custom_titles', true ) ) {
 			// Overwrite page title with custom SEO meta title for themes that support title-tag.
-			add_filter( 'pre_get_document_title', array( 'A8C_SEO_Title', 'get_custom_title' ) );
+			add_filter( 'pre_get_document_title', array( 'Advanced_SEO_Titles', 'get_custom_title' ) );
 
 			// Add overwrite support for themes that don't support title-tag.
-			add_filter( 'wp_title', array( 'A8C_SEO_Title', 'get_custom_title' ) );
+			add_filter( 'wp_title', array( 'Advanced_SEO_Titles', 'get_custom_title' ) );
 		}
 	}
 
@@ -50,20 +50,21 @@ class Jetpack_SEO {
 			return;
 		}
 
-		$description = A8C_SEO::get_front_page_meta_description() ?: get_bloginfo( 'description' );
+		$front_page_meta = Advanced_SEO::get_front_page_meta_description();
+		$description = $front_page_meta ? $front_page_meta : get_bloginfo( 'description' );
 
-		$site_host = apply_filters( 'jetpack_seo_site_host', get_site_url() );
+		$site_host = apply_filters( 'jetpack_seo_site_host', 'WordPress' );
 
-		$meta['title'] = sprintf( _x( '%1$s on %2$s', 'Site Title on WordPress' ), get_bloginfo( 'title' ),	$site_host );
+		$meta['title'] = sprintf( _x( '%1$s on %2$s', 'Site Title on WordPress', 'jetpack' ), get_bloginfo( 'title' ),	$site_host );
 		$meta['description'] = trim( $description );
 
-		// Try to target things if we're on a "specific" page of any kind
+		// Try to target things if we're on a "specific" page of any kind.
 		if ( is_singular() ) {
-			$meta['title'] = sprintf( _x( '%1$s | %2$s', 'Post Title | Site Title on WordPress' ), get_the_title(), $meta['title'] );
+			$meta['title'] = sprintf( _x( '%1$s | %2$s', 'Post Title | Site Title on WordPress', 'jetpack' ), get_the_title(), $meta['title'] );
 
-			// Business users can overwrite the description
-			if ( ! ( is_front_page() && A8C_SEO::get_front_page_meta_description() ) ) {
-				$description = A8C_SEO_Posts::get_post_description( get_post() );
+			// Business users can overwrite the description.
+			if ( ! ( is_front_page() && Advanced_SEO::get_front_page_meta_description() ) ) {
+				$description = Advanced_SEO_Posts::get_post_description( get_post() );
 
 				if ( $description ) {
 					$description = wp_trim_words( strip_shortcodes( wp_kses( $description, array() ) ) );
@@ -73,12 +74,12 @@ class Jetpack_SEO {
 
 		} else if ( is_author() ) {
 			$obj                 = get_queried_object();
-			$meta['title']       = sprintf( _x( 'Posts by %1$s | %2$s', 'Posts by Author Name | Blog Title on WordPress' ), $obj->display_name, $meta['title'] );
-			$meta['description'] = sprintf( _x( 'Read all of the posts by %1$s on %2$s', 'Read all of the posts by Author Name on Blog Title' ), $obj->display_name, get_bloginfo( 'title' ) );
+			$meta['title']       = sprintf( _x( 'Posts by %1$s | %2$s', 'Posts by Author Name | Blog Title on WordPress', 'jetpack' ), $obj->display_name, $meta['title'] );
+			$meta['description'] = sprintf( _x( 'Read all of the posts by %1$s on %2$s', 'Read all of the posts by Author Name on Blog Title', 'jetpack' ), $obj->display_name, get_bloginfo( 'title' ) );
 		} else if ( is_tag() || is_category() || is_tax() ) {
 			$obj = get_queried_object();
 
-			$meta['title'] = sprintf( _x( 'Posts about %1$s on %2$s', 'Posts about Category on Blog Title' ), single_term_title( '', false ), get_bloginfo( 'title' ) );
+			$meta['title'] = sprintf( _x( 'Posts about %1$s on %2$s', 'Posts about Category on Blog Title', 'jetpack' ), single_term_title( '', false ), get_bloginfo( 'title' ) );
 
 			$description = get_term_field( 'description', $obj->term_id, $obj->taxonomy, 'raw' );
 			if ( ! is_wp_error( $description ) && '' != $description ) {
@@ -86,7 +87,7 @@ class Jetpack_SEO {
 			} else {
 
 				$authors             = $this->get_authors();
-				$meta['description'] = wp_sprintf( _x( 'Posts about %1$s written by %2$l', 'Posts about Category written by John and Bob' ), single_term_title( '', false ), $authors );
+				$meta['description'] = wp_sprintf( _x( 'Posts about %1$s written by %2$l', 'Posts about Category written by John and Bob', 'jetpack' ), single_term_title( '', false ), $authors );
 			}
 		} else if ( is_date() ) {
 			if ( is_year() ) {
@@ -95,7 +96,8 @@ class Jetpack_SEO {
 					'%1$s post published by %2$l in the year %3$s', // singular
 					'%1$s posts published by %2$l in the year %3$s', // plural
 					count( $wp_query->posts ), // number
-					'10 posts published by John in the year 2012' // context
+					'10 posts published by John in the year 2012', // context
+					'jetpack'
 				);
 			} else if ( is_month() ) {
 				$period   = date( 'F Y', mktime( 0, 0, 0, get_query_var( 'monthnum' ), 1, get_query_var( 'year' ) ) );
@@ -103,7 +105,8 @@ class Jetpack_SEO {
 					'%1$s post published by %2$l during %3$s', // singular
 					'%1$s posts published by %2$l during %3$s', // plural
 					count( $wp_query->posts ), // number
-					'10 posts publishes by John during May 2012' // context
+					'10 posts publishes by John during May 2012', // context
+					'jetpack'
 				);
 			} else if ( is_day() ) {
 				$period   = date( 'F j, Y', mktime( 0, 0, 0, get_query_var( 'monthnum' ), get_query_var( 'day' ), get_query_var( 'year' ) ) );
@@ -111,10 +114,11 @@ class Jetpack_SEO {
 					'%1$s post published by %2$l on %3$s', // singular
 					'%1$s posts published by %2$l on %3$s', // plural
 					count( $wp_query->posts ), // number
-					'10 posts published by John on May 30, 2012' // context
+					'10 posts published by John on May 30, 2012', // context
+					'jetpack'
 				);
 			}
-			$meta['title'] = sprintf( _x( 'Posts from %1$s on %2$s', 'Posts from May 2012 on Blog Title' ), $period, get_bloginfo( 'title' ) );
+			$meta['title'] = sprintf( _x( 'Posts from %1$s on %2$s', 'Posts from May 2012 on Blog Title', 'jetpack' ), $period, get_bloginfo( 'title' ) );
 
 			$authors             = $this->get_authors();
 			$meta['description'] = wp_sprintf( $template, count( $wp_query->posts ), $authors, $period );

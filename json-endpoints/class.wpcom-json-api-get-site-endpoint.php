@@ -433,14 +433,10 @@ class WPCOM_JSON_API_GET_Site_Endpoint extends WPCOM_JSON_API_Endpoint {
 					$options[ $key ] = $site->get_ak_vp_bundle_enabled();
 					break;
 				case 'advanced_seo_front_page_description' :
-					if ( A8C_SEO::is_enabled_advanced_seo() || A8C_SEO::is_grandfathered_front_page_meta() ) {
-						$options[ $key ] = $this->site->get_advanced_seo_front_page_description();
-					}
+					$options[ $key ] = $this->site->get_advanced_seo_front_page_description();
 					break;
 				case 'advanced_seo_title_formats':
-					if ( A8C_SEO::is_enabled_advanced_seo() ) {
-						$options[ $key ] = $this->site->get_advanced_seo_title_formats();
-					}
+					$options[ $key ] = $this->site->get_advanced_seo_title_formats();
 					break;
 				case 'verification_services_codes' :
 					$options[ $key ] = $site->get_verification_services_codes();
