@@ -37,8 +37,6 @@
 class Advanced_SEO_Titles {
 	/**
 	 * Site option name used to store custom title formats.
-	 *
-	 * @var string
 	 */
 	const TITLE_FORMATS_OPTION = 'advanced_seo_title_formats';
 

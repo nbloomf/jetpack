@@ -27,13 +27,6 @@ class Advanced_SEO {
 		}
 
 		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-			/*
-			 * Avoid using has_business_plan check here because of performance issues:
-	         * https://lannisterp2.wordpress.com/2016/07/19/displaying-seo-features-based-on-current-site-plan/
-	         * https://code.a8c.com/D2341
-			 *
-			 * @hide-in-jetpack
-			 */
 			return has_blog_sticker( 'unlimited-premium-themes', $blog_id );
 		}
 
