@@ -502,6 +502,23 @@ export let VerificationToolsSettings = React.createClass( {
 						</span>
 					</div>
 
+					<div className="dops-card">
+						<FormLabel>
+							<FormLegend>Yandex</FormLegend>
+							<TextInput
+								name={ 'yandex' }
+								value={ this.props.getOptionValue( 'yandex' ) }
+								placeholder={ 'Example: 44d68e1216009f40' }
+								className="widefat code"
+								disabled={ this.props.isUpdating( 'yandex' ) }
+								onChange={ this.props.onOptionChange} />
+						</FormLabel>
+						<span className="jp-form-setting-explanation">
+							{ __( 'Meta key example: ' ) }
+							&lt;meta name='yandex-verification' content='<strong>44d68e1216009f40</strong>'&gt;
+						</span>
+					</div>
+
 					<FormButton
 						className="is-primary"
 						isSubmitting={ this.props.isSavingAnyOption() }

@@ -9,7 +9,7 @@
  * Requires Connection: Yes
  * Auto Activate: No
  * Module Tags: Social, Appearance
- * Feature: SEO, Jumpstart
+ * Feature: Engagement, Jumpstart
  * Additional Search Queries: search engine optimization, social preview, meta description, custom title format
  */
 

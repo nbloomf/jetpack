@@ -463,6 +463,7 @@ class Jetpack_Core_API_Module_Endpoint
 				case 'google':
 				case 'bing':
 				case 'pinterest':
+				case 'yandex':
 					$grouped_options = $grouped_options_current = (array) get_option( 'verification_services_codes' );
 					$grouped_options[ $option ] = $value;
 
@@ -892,6 +893,9 @@ class Jetpack_Core_API_Module_Data_Endpoint {
 						break;
 					case 'pinterest':
 						$services[] = 'Pinterest';
+						break;
+					case 'yandex':
+						$services[] = 'Yandex';
 						break;
 				}
 			}
