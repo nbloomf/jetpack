@@ -937,7 +937,7 @@ new Jetpack_JSON_API_Cron_Post_Endpoint( array(
 		'$site' => '(int|string) The site ID, The site domain'
 	),
 	'request_format' => array(
-		'hooks'       => '(array) List of hooks to run if they have been scheduled',
+		'hooks'       => '(array) List of hooks to run if they have been scheduled (optional)',
 	),
 	'response_format' => array(
 		'success' => '(array) Of processed hooks with their arguments'
@@ -953,7 +953,7 @@ new Jetpack_JSON_API_Cron_Post_Endpoint( array(
 
 // POST /sites/%s/cron/schedule
 new Jetpack_JSON_API_Cron_Schedule_Endpoint( array(
-	'description'     => 'Process items in the cron',
+	'description'     => 'Schedule one or recurring hook to fire at a particular time',
 	'group'           => '__do_not_document',
 	'method'          => 'POST',
 	'path'            => '/sites/%s/cron/schedule',
@@ -963,9 +963,9 @@ new Jetpack_JSON_API_Cron_Schedule_Endpoint( array(
 	),
 	'request_format' => array(
 		'hook'             => '(string) Hook name that should run when the event is scheduled',
-		'arguments'        => '(string) JSON Object of arguments that the hook will use',
 		'timestamp'        => '(int) Timestamp when the event should take place, has to be in the future',
-		'recurrence'       => '(string) How often the event should take place. Possible values 1min, hourly, twicedaily, daily'
+		'arguments'        => '(string) JSON Object of arguments that the hook will use (optional)',
+		'recurrence'       => '(string) How often the event should take place. If empty only one event will be scheduled. Possible values 1min, hourly, twicedaily, daily (optional) '
 	),
 	'response_format' => array(
 		'success' => '(bool) Was the event scheduled?'
@@ -984,7 +984,7 @@ new Jetpack_JSON_API_Cron_Schedule_Endpoint( array(
 
 // POST /sites/%s/cron/unschedule
 new Jetpack_JSON_API_Cron_Unschedule_Endpoint( array(
-	'description'     => 'Process items in the cron',
+	'description'     => 'Unschedule one or all events with a particular hook and arguments',
 	'group'           => '__do_not_document',
 	'method'          => 'POST',
 	'path'            => '/sites/%s/cron/unschedule',
@@ -994,8 +994,8 @@ new Jetpack_JSON_API_Cron_Unschedule_Endpoint( array(
 	),
 	'request_format' => array(
 		'hook'             => '(string) Name of the hook that should be unscheduled',
-		'arguments'        => '(string) JSON Object of arguments that the hook has been scheduled with',
-		'timestamp'        => '(int) Timestamp of the hook that you want to unschedule. This will unschedule only 1 event.'
+		'timestamp'        => '(int) Timestamp of the hook that you want to unschedule. This will unschedule only 1 event. (optional)',
+		'arguments'        => '(string) JSON Object of arguments that the hook has been scheduled with (optional)',
 	),
 	'response_format' => array(
 		'success' => '(bool) Was the event unscheduled?'

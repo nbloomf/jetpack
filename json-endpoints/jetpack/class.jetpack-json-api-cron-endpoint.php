@@ -28,7 +28,7 @@ class Jetpack_JSON_API_Cron_Endpoint extends Jetpack_JSON_API_Endpoint {
 		// The cron lock: a unix timestamp from when the cron was spawned.
 		$doing_cron_transient = $this->get_cron_lock();
 		if ( $doing_cron_transient && ( $doing_cron_transient + WP_CRON_LOCK_TIMEOUT > $gmt_time )  ) {
-			return new WP_Error( 'cron-is-locked', 'Current there is a cron already happening.' );
+			return new WP_Error( 'cron-is-locked', 'Current there is a cron already happening.', 403 );
 		}
 		return $doing_cron_transient;
 	}
@@ -92,14 +92,14 @@ class Jetpack_JSON_API_Cron_Post_Endpoint extends Jetpack_JSON_API_Cron_Endpoint
 		$args = $this->input();
 
 		if ( false === $crons = _get_cron_array() ) {
-			return new WP_Error( 'no-cron-event', 'Currently there are no cron events' );
+			return new WP_Error( 'no-cron-event', 'Currently there are no cron events', 400 );
 		}
 
-		$keys = array_keys( $crons );
+		$timestamps_to_run = array_keys( $crons );
 		$gmt_time = microtime( true );
 
-		if ( isset( $keys[0] ) && $keys[0] > $gmt_time ) {
-			return new WP_Error( 'no-cron-event', 'Currently there are no cron events ready to be run' );
+		if ( isset( $timestamps_to_run[0] ) && $timestamps_to_run[0] > $gmt_time ) {
+			return new WP_Error( 'no-cron-event', 'Currently there are no cron events ready to be run', 400 );
 		}
 
 		$locked = $this->is_cron_locked( $gmt_time );
@@ -156,15 +156,15 @@ class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Endp
 	protected function result() {
 		$args = $this->input();
 		if ( ! isset( $args['timestamp'] ) ) {
-			return new WP_Error( 'missing_argument', 'Please provide the timestamp argument' );
+			return new WP_Error( 'missing_argument', 'Please provide the timestamp argument', 400 );
 		}
 
 		if ( ! is_int( $args['timestamp'] ) || $args['timestamp'] < time() ) {
-			return new WP_Error( 'timestamp-invalid', 'Please provide timestamp that is an integer and set in the future' );
+			return new WP_Error( 'timestamp-invalid', 'Please provide timestamp that is an integer and set in the future', 400 );
 		}
 
 		if ( ! isset( $args['hook'] ) ) {
-			return new WP_Error( 'missing_argument', 'Please provide the hook argument' );
+			return new WP_Error( 'missing_argument', 'Please provide the hook argument', 400 );
 		}
 
 		$hook = $this->sanitize_hook( $args['hook'] );
@@ -180,11 +180,11 @@ class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Endp
 		if ( isset( $args['recurrence'] ) ) {
 			$schedules = wp_get_schedules();
 			if ( ! isset( $schedules[ $args['recurrence'] ] ) ) {
-				return new WP_Error( 'invalid-recurrence', 'Please provide a valid recurrence argument' );
+				return new WP_Error( 'invalid-recurrence', 'Please provide a valid recurrence argument', 400 );
 			}
 
 			if ( count( $next_scheduled ) > 0 ) {
-				return new WP_Error( 'event-already-scheduled', 'This event is ready scheduled' );
+				return new WP_Error( 'event-already-scheduled', 'This event is ready scheduled', 400 );
 			}
 			$lock = $this->lock_cron();
 			wp_schedule_event( $args['timestamp'], $args['recurrence'], $hook, $arguments );
@@ -194,7 +194,7 @@ class Jetpack_JSON_API_Cron_Schedule_Endpoint extends Jetpack_JSON_API_Cron_Endp
 
 		foreach( $next_scheduled as $scheduled_time ) {
 			if ( abs( $scheduled_time - $args['timestamp'] ) <= 10 * MINUTE_IN_SECONDS ) {
-				return new WP_Error( 'event-already-scheduled', 'This event is ready scheduled' );
+				return new WP_Error( 'event-already-scheduled', 'This event is ready scheduled', 400 );
 			}
 		}
 		$lock = $this->lock_cron();
@@ -211,7 +211,7 @@ class Jetpack_JSON_API_Cron_Unschedule_Endpoint extends Jetpack_JSON_API_Cron_En
 		$args = $this->input();
 
 		if ( !isset( $args['hook'] ) ) {
-			return new WP_Error( 'missing_argument', 'Please provide the hook argument' );
+			return new WP_Error( 'missing_argument', 'Please provide the hook argument', 400 );
 		}
 
 		$hook = $this->sanitize_hook( $args['hook'] );
@@ -223,7 +223,7 @@ class Jetpack_JSON_API_Cron_Unschedule_Endpoint extends Jetpack_JSON_API_Cron_En
 
 		$crons = _get_cron_array();
 		if ( empty( $crons ) ) {
-			return new WP_Error( 'cron-not-present', 'Unable to unschedule an event, no events in the cron' );
+			return new WP_Error( 'cron-not-present', 'Unable to unschedule an event, no events in the cron', 400 );
 		}
 
 		$arguments = $this->resolve_arguments();
@@ -231,7 +231,7 @@ class Jetpack_JSON_API_Cron_Unschedule_Endpoint extends Jetpack_JSON_API_Cron_En
 		if ( isset( $args['timestamp'] ) ) {
 			$next_schedulded = $this->get_schedules( $hook, $arguments );
 			if ( in_array( $args['timestamp'], $next_schedulded ) ) {
-				return new WP_Error( 'event-not-present', 'Unable to unschedule the event, the event doesn\'t exist' );
+				return new WP_Error( 'event-not-present', 'Unable to unschedule the event, the event doesn\'t exist', 400 );
 			}
 
 			$lock = $this->lock_cron();
