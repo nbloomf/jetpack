@@ -82,6 +82,10 @@ There are opportunities for developers at all levels to contribute. [Learn more 
 * Admin Page: redesign Development mode banner. #5186
 * Related Posts: add posts to the WP REST API Post Response. #3425
 
+**Improved Compatibility:**
+
+* Open Graph: add SEO by Squirrly TM to the list of conflicting plugins. #5365
+
 **Bug Fixes:**
 
 
