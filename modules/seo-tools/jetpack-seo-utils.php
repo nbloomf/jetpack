@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class containing utility static methods that other seo tools are relying on.
+ * Class containing utility static methods that other SEO tools are relying on.
  */
 class Jetpack_SEO_Utils {
 	/**
@@ -15,11 +15,11 @@ class Jetpack_SEO_Utils {
 	const GRANDFATHERED_META_OPTION = 'seo_meta_description';
 
 	/**
-	 * Used to check whether seo tools are enabled for given site.
+	 * Used to check whether SEO tools are enabled for given site.
 	 *
 	 * @param int $blog_id Optional. Defaults to current blog id if not given.
 	 *
-	 * @return bool True if seo tools are enabled, false otherwise.
+	 * @return bool True if SEO tools are enabled, false otherwise.
 	 */
 	public static function is_enabled_jetpack_seo( $blog_id = 0 ) {
 		if ( empty( $blog_id ) ) {
@@ -73,7 +73,7 @@ class Jetpack_SEO_Utils {
 	public static function update_front_page_meta_description( $value ) {
 		$front_page_description = sanitize_text_field( $value );
 
-		// By default, seo front page meta description should be shorter than 300 characters
+		// By default, SEO front page meta description should be shorter than 300 characters
 		$description_max_length = apply_filters( 'jetpack_seo_front_page_description_max_length', 300 );
 		$front_page_description = mb_substr( $front_page_description, 0, $description_max_length );
 
