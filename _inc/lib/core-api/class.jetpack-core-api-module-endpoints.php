@@ -471,6 +471,10 @@ class Jetpack_Core_API_Module_Endpoint
 					break;
 
 				case 'sharing_services':
+					if ( ! class_exists( 'Sharing_Service' ) && ! @include( JETPACK__PLUGIN_DIR . 'modules/sharedaddy/sharing-service.php' ) ) {
+						break;
+					}
+
 					$sharer = new Sharing_Service();
 
 					// If option value was the same, consider it done.
@@ -480,6 +484,10 @@ class Jetpack_Core_API_Module_Endpoint
 				case 'button_style':
 				case 'sharing_label':
 				case 'show':
+					if ( ! class_exists( 'Sharing_Service' ) && ! @include( JETPACK__PLUGIN_DIR . 'modules/sharedaddy/sharing-service.php' ) ) {
+						break;
+					}
+
 					$sharer = new Sharing_Service();
 					$grouped_options = $sharer->get_global_options();
 					$grouped_options[ $option ] = $value;
@@ -487,6 +495,10 @@ class Jetpack_Core_API_Module_Endpoint
 					break;
 
 				case 'custom':
+					if ( ! class_exists( 'Sharing_Service' ) && ! @include( JETPACK__PLUGIN_DIR . 'modules/sharedaddy/sharing-service.php' ) ) {
+						break;
+					}
+
 					$sharer = new Sharing_Service();
 					$updated = $sharer->new_service( stripslashes( $value['sharing_name'] ), stripslashes( $value['sharing_url'] ), stripslashes( $value['sharing_icon'] ) );
 
@@ -495,6 +507,10 @@ class Jetpack_Core_API_Module_Endpoint
 					break;
 
 				case 'sharing_delete_service':
+					if ( ! class_exists( 'Sharing_Service' ) && ! @include( JETPACK__PLUGIN_DIR . 'modules/sharedaddy/sharing-service.php' ) ) {
+						break;
+					}
+
 					$sharer = new Sharing_Service();
 					$updated = $sharer->delete_service( $value );
 					break;
