@@ -58,7 +58,7 @@ function jetpack_og_tags() {
 		$site_type              = Jetpack_Options::get_option_and_ensure_autoload( 'open_graph_protocol_site_type', '' );
 		$tags['og:type']        = ! empty( $site_type ) ? $site_type : 'website';
 		$tags['og:title']       = get_bloginfo( 'name' );
-		$front_page_meta        = Advanced_SEO::get_front_page_meta_description();
+		$front_page_meta        = Jetpack_SEO_Utils::get_front_page_meta_description();
 		$tags['og:description'] =  $front_page_meta ? $front_page_meta : get_bloginfo( 'description' );
 
 		$front_page_id = get_option( 'page_for_posts' );

@@ -1,6 +1,6 @@
 <?php
 /**
- * Module Name: Advanced SEO
+ * Module Name: SEO tools
  * Module Description: Adds tools to enhance your site's content for better results on search engines and social media.
  * Jumpstart Description: Adds tools to enhance your site's content for better results on search engines and social media.
  * Sort Order: 35
@@ -13,7 +13,7 @@
  * Additional Search Queries: search engine optimization, social preview, meta description, custom title format
  */
 
-include dirname( __FILE__ ) . '/advanced-seo/advanced-seo.php';
-include dirname( __FILE__ ) . '/advanced-seo/advanced-seo-posts.php';
-include dirname( __FILE__ ) . '/advanced-seo/advanced-seo-titles.php';
-include dirname( __FILE__ ) . '/advanced-seo/jetpack-seo.php';
+include dirname( __FILE__ ) . '/seo-tools/jetpack-seo-utils.php';
+include dirname( __FILE__ ) . '/seo-tools/jetpack-seo-posts.php';
+include dirname( __FILE__ ) . '/seo-tools/jetpack-seo-titles.php';
+include dirname( __FILE__ ) . '/seo-tools/jetpack-seo.php';

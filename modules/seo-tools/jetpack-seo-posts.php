@@ -3,7 +3,7 @@
 /**
  * Class containing utility static methods for managing SEO custom descriptions for Posts and Pages.
  */
-class Advanced_SEO_Posts {
+class Jetpack_SEO_Posts {
 	/**
 	 * Key of the post meta value that will be used to store post custom description.
 	 */
@@ -50,7 +50,7 @@ class Advanced_SEO_Posts {
 
 		$custom_description = get_post_meta( $post->ID, self::DESCRIPTION_META_KEY, true );
 
-		if ( empty( $custom_description ) || ! Advanced_SEO::is_enabled_advanced_seo() ) {
+		if ( empty( $custom_description ) || ! Jetpack_SEO_Utils::is_enabled_advanced_seo() ) {
 			return '';
 		}
 

@@ -34,7 +34,7 @@
 /**
  * Class containing utility static methods for managing SEO custom title formats.
  */
-class Advanced_SEO_Titles {
+class Jetpack_SEO_Titles {
 	/**
 	 * Site option name used to store custom title formats.
 	 */
@@ -46,7 +46,7 @@ class Advanced_SEO_Titles {
 	 * @return array Array of custom title formats, or empty array.
 	 */
 	public static function get_custom_title_formats() {
-		if( Advanced_SEO::is_enabled_advanced_seo() ) {
+		if( Jetpack_SEO_Utils::is_enabled_advanced_seo() ) {
 			return get_option( self::TITLE_FORMATS_OPTION, array() );
 		}
 
@@ -95,7 +95,7 @@ class Advanced_SEO_Titles {
 			return $default_title;
 		}
 
-		if ( ! Advanced_SEO::is_enabled_advanced_seo() ) {
+		if ( ! Jetpack_SEO_Utils::is_enabled_advanced_seo() ) {
 			return $default_title;
 		}
 

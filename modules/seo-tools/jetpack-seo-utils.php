@@ -3,7 +3,7 @@
 /**
  * Class containing utility static methods that other advanced seo features are relying on.
  */
-class Advanced_SEO {
+class Jetpack_SEO_Utils {
 	/**
 	 * Site option name used to store front page meta description.
 	 */
@@ -26,11 +26,10 @@ class Advanced_SEO {
 			$blog_id = get_current_blog_id();
 		}
 
-		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+		if ( function_exists( 'has_blog_sticker' ) ) {
 			return has_blog_sticker( 'unlimited-premium-themes', $blog_id );
 		}
 
-		// Enable for Jetpack sites.
 		return true;
 	}
 

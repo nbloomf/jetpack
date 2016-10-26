@@ -133,7 +133,7 @@ abstract class SAL_Post {
 					);
 
 			// Only business plan subscribers can view custom meta description
-			if ( Advanced_SEO_Posts::DESCRIPTION_META_KEY == $meta_key && ! Advanced_SEO::is_enabled_advanced_seo() ) {
+			if ( Jetpack_SEO_Posts::DESCRIPTION_META_KEY == $meta_key && ! Jetpack_SEO_Utils::is_enabled_advanced_seo() ) {
 				$show = false;
 			}
 

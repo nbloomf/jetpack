@@ -18,10 +18,10 @@ class Jetpack_SEO {
 
 		if ( apply_filters( 'jetpack_seo_custom_titles', true ) ) {
 			// Overwrite page title with custom SEO meta title for themes that support title-tag.
-			add_filter( 'pre_get_document_title', array( 'Advanced_SEO_Titles', 'get_custom_title' ) );
+			add_filter( 'pre_get_document_title', array( 'Jetpack_SEO_Titles', 'get_custom_title' ) );
 
 			// Add overwrite support for themes that don't support title-tag.
-			add_filter( 'wp_title', array( 'Advanced_SEO_Titles', 'get_custom_title' ) );
+			add_filter( 'wp_title', array( 'Jetpack_SEO_Titles', 'get_custom_title' ) );
 		}
 	}
 
@@ -50,7 +50,7 @@ class Jetpack_SEO {
 			return;
 		}
 
-		$front_page_meta = Advanced_SEO::get_front_page_meta_description();
+		$front_page_meta = Jetpack_SEO_Utils::get_front_page_meta_description();
 		$description = $front_page_meta ? $front_page_meta : get_bloginfo( 'description' );
 
 		$site_host = apply_filters( 'jetpack_seo_site_host', 'WordPress' );
@@ -63,8 +63,8 @@ class Jetpack_SEO {
 			$meta['title'] = sprintf( _x( '%1$s | %2$s', 'Post Title | Site Title on WordPress', 'jetpack' ), get_the_title(), $meta['title'] );
 
 			// Business users can overwrite the description.
-			if ( ! ( is_front_page() && Advanced_SEO::get_front_page_meta_description() ) ) {
-				$description = Advanced_SEO_Posts::get_post_description( get_post() );
+			if ( ! ( is_front_page() && Jetpack_SEO_Utils::get_front_page_meta_description() ) ) {
+				$description = Jetpack_SEO_Posts::get_post_description( get_post() );
 
 				if ( $description ) {
 					$description = wp_trim_words( strip_shortcodes( wp_kses( $description, array() ) ) );

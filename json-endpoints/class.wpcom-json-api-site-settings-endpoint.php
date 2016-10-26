@@ -427,15 +427,15 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					break;
 
 				case 'advanced_seo_front_page_description':
-					if ( ! Advanced_SEO::is_enabled_advanced_seo() && ! Advanced_SEO::has_grandfathered_front_page_meta() ) {
-						return new WP_Error( 'unauthorized', __( 'Advanced SEO is not enabled for this site.' ), 403 );
+					if ( ! Jetpack_SEO_Utils::is_enabled_advanced_seo() && ! Jetpack_SEO_Utils::has_grandfathered_front_page_meta() ) {
+						return new WP_Error( 'unauthorized', __( 'SEO tools are not enabled for this site.', 'Jetpack' ), 403 );
 					}
 
 					if ( ! is_string( $value ) ) {
-						return new WP_Error( 'invalid_input', __( 'Invalid SEO meta description value.' ), 400 );
+						return new WP_Error( 'invalid_input', __( 'Invalid SEO meta description value.', 'Jetpack' ), 400 );
 					}
 
-					$new_description = Advanced_SEO::update_front_page_meta_description( $value );
+					$new_description = Jetpack_SEO_Utils::update_front_page_meta_description( $value );
 
 					if ( ! empty( $new_description ) ) {
 						$updated[ $key ] = $new_description;
@@ -443,15 +443,15 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					break;
 
 				case 'advanced_seo_title_formats':
-					if ( ! Advanced_SEO::is_enabled_advanced_seo() ) {
-						return new WP_Error( 'unauthorized', __( 'Advanced SEO is not enabled for this site.' ), 403 );
+					if ( ! Jetpack_SEO_Utils::is_enabled_advanced_seo() ) {
+						return new WP_Error( 'unauthorized', __( 'SEO tools are not enabled for this site.', 'Jetpack' ), 403 );
 					}
 
-					if ( ! Advanced_SEO_Titles::are_valid_title_formats( $value ) ) {
-						return new WP_Error( 'invalid_input', __( 'Invalid SEO title format.' ), 400 );
+					if ( ! Jetpack_SEO_Titles::are_valid_title_formats( $value ) ) {
+						return new WP_Error( 'invalid_input', __( 'Invalid SEO title format.', 'Jetpack' ), 400 );
 					}
 
-					$new_title_formats = Advanced_SEO_Titles::update_title_formats( $value );
+					$new_title_formats = Jetpack_SEO_Titles::update_title_formats( $value );
 
 					if ( ! empty( $new_title_formats ) ) {
 						$updated[ $key ] = $new_title_formats;
