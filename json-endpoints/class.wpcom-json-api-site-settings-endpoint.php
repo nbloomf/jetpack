@@ -427,7 +427,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					break;
 
 				case 'advanced_seo_front_page_description':
-					if ( ! Jetpack_SEO_Utils::is_enabled_advanced_seo() && ! Jetpack_SEO_Utils::has_grandfathered_front_page_meta() ) {
+					if ( ! Jetpack_SEO_Utils::is_enabled_jetpack_seo() && ! Jetpack_SEO_Utils::has_grandfathered_front_page_meta() ) {
 						return new WP_Error( 'unauthorized', __( 'SEO tools are not enabled for this site.', 'Jetpack' ), 403 );
 					}
 
@@ -443,7 +443,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					break;
 
 				case 'advanced_seo_title_formats':
-					if ( ! Jetpack_SEO_Utils::is_enabled_advanced_seo() ) {
+					if ( ! Jetpack_SEO_Utils::is_enabled_jetpack_seo() ) {
 						return new WP_Error( 'unauthorized', __( 'SEO tools are not enabled for this site.', 'Jetpack' ), 403 );
 					}
 

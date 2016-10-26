@@ -21,7 +21,7 @@ class Jetpack_SEO_Utils {
 	 *
 	 * @return bool True if advanced seo features are enabled, false otherwise.
 	 */
-	public static function is_enabled_advanced_seo( $blog_id = 0 ) {
+	public static function is_enabled_jetpack_seo( $blog_id = 0 ) {
 		if ( empty( $blog_id ) ) {
 			$blog_id = get_current_blog_id();
 		}
@@ -39,7 +39,7 @@ class Jetpack_SEO_Utils {
 	 * @return bool True if we should enable grandfathering, false otherwise.
 	 */
 	public static function has_grandfathered_front_page_meta() {
-		return ! self::is_enabled_advanced_seo() && get_option( self::GRANDFATHERED_META_OPTION );
+		return ! self::is_enabled_jetpack_seo() && get_option( self::GRANDFATHERED_META_OPTION );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Jetpack_SEO_Utils {
 	 * @return string Front page meta description string or empty string.
 	 */
 	public static function get_front_page_meta_description() {
-		if ( self::is_enabled_advanced_seo() ) {
+		if ( self::is_enabled_jetpack_seo() ) {
 			$front_page_meta = get_option( self::FRONT_PAGE_META_OPTION );
 			return  $front_page_meta ? $front_page_meta : get_option( self::GRANDFATHERED_META_OPTION, '' );
 		}
@@ -77,7 +77,7 @@ class Jetpack_SEO_Utils {
 		$description_max_length = apply_filters( 'advanced_seo_front_page_description_max_length', 300 );
 		$front_page_description = mb_substr( $front_page_description, 0, $description_max_length );
 
-		$can_set_meta = self::is_enabled_advanced_seo();
+		$can_set_meta = self::is_enabled_jetpack_seo();
 		$has_old_meta = ! empty( get_option( self::GRANDFATHERED_META_OPTION ) );
 		$option_name = self::has_grandfathered_front_page_meta() ? self::GRANDFATHERED_META_OPTION : self::FRONT_PAGE_META_OPTION;
 

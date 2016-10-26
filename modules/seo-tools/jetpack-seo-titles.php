@@ -46,7 +46,7 @@ class Jetpack_SEO_Titles {
 	 * @return array Array of custom title formats, or empty array.
 	 */
 	public static function get_custom_title_formats() {
-		if( Jetpack_SEO_Utils::is_enabled_advanced_seo() ) {
+		if( Jetpack_SEO_Utils::is_enabled_jetpack_seo() ) {
 			return get_option( self::TITLE_FORMATS_OPTION, array() );
 		}
 
@@ -95,7 +95,7 @@ class Jetpack_SEO_Titles {
 			return $default_title;
 		}
 
-		if ( ! Jetpack_SEO_Utils::is_enabled_advanced_seo() ) {
+		if ( ! Jetpack_SEO_Utils::is_enabled_jetpack_seo() ) {
 			return $default_title;
 		}
 

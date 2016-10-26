@@ -50,7 +50,7 @@ class Jetpack_SEO_Posts {
 
 		$custom_description = get_post_meta( $post->ID, self::DESCRIPTION_META_KEY, true );
 
-		if ( empty( $custom_description ) || ! Jetpack_SEO_Utils::is_enabled_advanced_seo() ) {
+		if ( empty( $custom_description ) || ! Jetpack_SEO_Utils::is_enabled_jetpack_seo() ) {
 			return '';
 		}
 
