@@ -37,7 +37,7 @@ class Jetpack_SEO_Posts {
 
 	/**
 	 * Returns post's custom meta description if it is set, and if
-	 * advanced SEO is enabled for current blog.
+	 * SEO tools are enabled for current blog.
 	 *
 	 * @param WP_Post $post Source of data for custom description
 	 *

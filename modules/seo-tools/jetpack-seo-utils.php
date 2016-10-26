@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class containing utility static methods that other advanced seo features are relying on.
+ * Class containing utility static methods that other seo tools are relying on.
  */
 class Jetpack_SEO_Utils {
 	/**
@@ -15,11 +15,11 @@ class Jetpack_SEO_Utils {
 	const GRANDFATHERED_META_OPTION = 'seo_meta_description';
 
 	/**
-	 * Used to check whether advanced seo features are enabled.
+	 * Used to check whether seo tools are enabled for given site.
 	 *
 	 * @param int $blog_id Optional. Defaults to current blog id if not given.
 	 *
-	 * @return bool True if advanced seo features are enabled, false otherwise.
+	 * @return bool True if seo tools are enabled, false otherwise.
 	 */
 	public static function is_enabled_jetpack_seo( $blog_id = 0 ) {
 		if ( empty( $blog_id ) ) {
@@ -46,7 +46,7 @@ class Jetpack_SEO_Utils {
 	 * Returns front page meta description for current site.
 	 *
 	 * Since we allowed non-business users to set Front page meta description for some time,
-	 * before bundling it with other advanced SEO features that require a business plan,
+	 * before bundling it with other SEO tools features that require a business plan,
 	 * we are supporting grandfathering here.
 	 *
 	 * @return string Front page meta description string or empty string.

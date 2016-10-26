@@ -23,6 +23,21 @@ class Jetpack_SEO {
 			// Add overwrite support for themes that don't support title-tag.
 			add_filter( 'wp_title', array( 'Jetpack_SEO_Titles', 'get_custom_title' ) );
 		}
+
+		add_filter( 'jetpack_open_graph_tags', function( $tags ) {
+			$custom_title = Jetpack_SEO_Titles::get_custom_title();
+			$post_custom_description = Jetpack_SEO_Posts::get_post_custom_description( get_post() );
+
+			if ( ! empty( $custom_title ) ) {
+				$tags['og:title'] = $custom_title;
+			}
+
+			if ( !empty ( $post_custom_description ) ) {
+				$tags['og:description'] = $post_custom_description;
+			}
+
+			return $tags;
+		} );
 	}
 
 	private function get_authors() {
@@ -54,6 +69,7 @@ class Jetpack_SEO {
 		$description = $front_page_meta ? $front_page_meta : get_bloginfo( 'description' );
 
 		$site_host = apply_filters( 'jetpack_seo_site_host', 'WordPress' );
+
 
 		$meta['title'] = sprintf( _x( '%1$s on %2$s', 'Site Title on WordPress', 'jetpack' ), get_bloginfo( 'title' ),	$site_host );
 		$meta['description'] = trim( $description );
@@ -124,6 +140,12 @@ class Jetpack_SEO {
 			$meta['description'] = wp_sprintf( $template, count( $wp_query->posts ), $authors, $period );
 		}
 
+		$custom_title = Jetpack_SEO_Titles::get_custom_title();
+
+		if ( ! empty( $custom_title) ) {
+			$meta['title'] = $custom_title;
+		}
+
 		// Output them
 		foreach ( $meta as $name => $content ) {
 			if ( ! empty( $content ) ) {
@@ -132,5 +154,3 @@ class Jetpack_SEO {
 		}
 	}
 }
-
-new Jetpack_SEO;

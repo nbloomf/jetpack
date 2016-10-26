@@ -17,3 +17,5 @@ include dirname( __FILE__ ) . '/seo-tools/jetpack-seo-utils.php';
 include dirname( __FILE__ ) . '/seo-tools/jetpack-seo-posts.php';
 include dirname( __FILE__ ) . '/seo-tools/jetpack-seo-titles.php';
 include dirname( __FILE__ ) . '/seo-tools/jetpack-seo.php';
+
+new Jetpack_SEO;
