@@ -74,7 +74,7 @@ class Jetpack_SEO_Utils {
 		$front_page_description = sanitize_text_field( $value );
 
 		// By default, seo front page meta description should be shorter than 300 characters
-		$description_max_length = apply_filters( 'advanced_seo_front_page_description_max_length', 300 );
+		$description_max_length = apply_filters( 'jetpack_seo_front_page_description_max_length', 300 );
 		$front_page_description = mb_substr( $front_page_description, 0, $description_max_length );
 
 		$can_set_meta = self::is_enabled_jetpack_seo();

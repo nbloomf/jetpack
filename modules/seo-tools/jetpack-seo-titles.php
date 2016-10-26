@@ -177,7 +177,7 @@ class Jetpack_SEO_Titles {
 	 * @return bool True if current theme sets custom title, false otherwise.
 	 */
 	public static function is_conflicted_theme() {
-		$conflicted_themes = apply_filters( 'advanced_seo_custom_title_conflicted_themes', array() );
+		$conflicted_themes = apply_filters( 'jetpack_seo_custom_title_conflicted_themes', array() );
 
 		return isset( $conflicted_themes[ get_option( 'template' ) ] );
 	}
