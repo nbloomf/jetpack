@@ -161,8 +161,8 @@ class WP_Test_Jetpack_Sync_Options extends WP_Test_Jetpack_Sync_Base {
 			'users_can_register'                   => '1',
 			'active_plugins'                       => array( 'pineapple' ),
 			'uninstall_plugins'                    => 'banana',
-			Jetpack_SEO_Utils::FRONT_PAGE_META_OPTION  => 'banana',
-			Jetpack_SEO_Titles::TITLE_FORMATS_OPTION   => array( 'posts' => array( 'type' => 'string', 'value' => 'test' ) ),
+			'advanced_seo_front_page_description'  => 'banana',
+			'advanced_seo_title_formats'           => array( 'posts' => array( 'type' => 'string', 'value' => 'test' ) ),
 		);
 
 		$theme_mod_key             = 'theme_mods_' . get_option( 'stylesheet' );
