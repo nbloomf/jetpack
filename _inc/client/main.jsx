@@ -166,9 +166,6 @@ const Main = React.createClass( {
 				pageComponent = <Plans siteRawUrl={ this.props.siteRawUrl } siteAdminUrl={ this.props.siteAdminUrl } />;
 				break;
 			case '/settings':
-				navComponent = <NavigationSettings route={ this.props.route } />;
-				pageComponent = <Writing route={ this.props.route } siteAdminUrl={ this.props.siteAdminUrl } />;
-				break;
 			case '/writing':
 				navComponent = <NavigationSettings route={ this.props.route } />;
 				pageComponent = <Writing route={ this.props.route } siteAdminUrl={ this.props.siteAdminUrl } />;
