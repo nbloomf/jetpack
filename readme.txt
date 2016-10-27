@@ -82,6 +82,7 @@ There are opportunities for developers at all levels to contribute. [Learn more 
 * Admin Page: redesign Development mode banner. #5186
 * Documentation: Improvements to README.md sections about development workflow and clarification about Node versions required for the build tasks. #5428
 * Related Posts: add posts to the WP REST API Post Response. #3425
+* Widgets: new 'My Community' widget displaying people who recently interacted with your site. #3358
 
 **Improved Compatibility:**
 
