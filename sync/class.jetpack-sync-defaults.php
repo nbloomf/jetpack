@@ -104,8 +104,8 @@ class Jetpack_Sync_Defaults {
 		'users_can_register',
 		'active_plugins',
 		'uninstall_plugins',
-		Jetpack_SEO_Utils::FRONT_PAGE_META_OPTION,
-		Jetpack_SEO_Titles::TITLE_FORMATS_OPTION,
+		'advanced_seo_front_page_description', // Jetpack_SEO_Utils::FRONT_PAGE_META_OPTION
+		'advanced_seo_title_formats', // Jetpack_SEO_Titles::TITLE_FORMATS_OPTION
 	);
 
 	static $default_constants_whitelist = array(
@@ -234,7 +234,7 @@ class Jetpack_Sync_Defaults {
 		'switch_like_status',
 		'videopress_guid',
 		'vimeo_poster_image',
-		Jetpack_SEO_Posts::DESCRIPTION_META_KEY,
+		'advanced_seo_description', // Jetpack_SEO_Posts::DESCRIPTION_META_KEY
 	);
 
 	static $comment_meta_whitelist = array(

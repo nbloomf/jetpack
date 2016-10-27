@@ -480,7 +480,7 @@ export let VerificationToolsSettings = React.createClass( {
 								onChange={ this.props.onOptionChange} />
 						</FormLabel>
 						<span className="jp-form-setting-explanation">
-							{ __( 'Meta key example:' )  }
+							{ __( 'Meta key example:' ) }
 							&nbsp;&lt;meta name='msvalidate.01' content='<strong>12C1203B5086AECE94EB3A3D9830B2E</strong>'&gt;
 						</span>
 					</div>
