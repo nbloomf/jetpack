@@ -149,11 +149,11 @@ class Jetpack_Site extends Abstract_Jetpack_Site {
 
 	function get_ak_vp_bundle_enabled() {}
 
-	function get_advanced_seo_front_page_description() {
+	function get_jetpack_seo_front_page_description() {
 		return Jetpack_SEO_Utils::get_front_page_meta_description();
 	}
 
-	function get_advanced_seo_title_formats() {
+	function get_jetpack_seo_title_formats() {
 		return Jetpack_SEO_Titles::get_custom_title_formats();
 	}
 

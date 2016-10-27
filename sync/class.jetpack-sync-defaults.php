@@ -104,8 +104,8 @@ class Jetpack_Sync_Defaults {
 		'users_can_register',
 		'active_plugins',
 		'uninstall_plugins',
-		'advanced_seo_front_page_description',
-		'advanced_seo_title_formats',
+		Jetpack_SEO_Utils::FRONT_PAGE_META_OPTION,
+		Jetpack_SEO_Titles::TITLE_FORMATS_OPTION,
 	);
 
 	static $default_constants_whitelist = array(
@@ -223,7 +223,6 @@ class Jetpack_Sync_Defaults {
 		'_wp_page_template',
 		'_wp_trash_meta_comments_status',
 		'_wpas_mess',
-		'advanced_seo_description',
 		'content_width',
 		'custom_css_add',
 		'custom_css_preprocessor',
@@ -235,6 +234,7 @@ class Jetpack_Sync_Defaults {
 		'switch_like_status',
 		'videopress_guid',
 		'vimeo_poster_image',
+		Jetpack_SEO_Posts::DESCRIPTION_META_KEY,
 	);
 
 	static $comment_meta_whitelist = array(

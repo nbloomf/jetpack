@@ -17,7 +17,11 @@ class Jetpack_SEO_Posts {
 	 * @return string Post description or empty string.
 	 */
 	public static function get_post_description( $post ) {
-		if ( post_password_required() ) {
+		if ( empty( $post ) ) {
+			return '';
+		}
+
+		if ( post_password_required() || ! is_singular() ) {
 			return '';
 		}
 

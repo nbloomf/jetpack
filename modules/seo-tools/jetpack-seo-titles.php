@@ -60,11 +60,11 @@ class Jetpack_SEO_Titles {
 	 */
 	public static function get_allowed_tokens() {
 		return array(
-			'front_page' => [ 'site_name', 'tagline' ],
-			'posts'      => [ 'site_name', 'tagline', 'post_title' ],
-			'pages'      => [ 'site_name', 'tagline', 'page_title' ],
-			'groups'     => [ 'site_name', 'tagline', 'group_title' ],
-			'archives'   => [ 'site_name', 'tagline', 'date' ],
+			'front_page' => array( 'site_name', 'tagline' ),
+			'posts'      => array( 'site_name', 'tagline', 'post_title' ),
+			'pages'      => array( 'site_name', 'tagline', 'page_title' ),
+			'groups'     => array( 'site_name', 'tagline', 'group_title' ),
+			'archives'   => array( 'site_name', 'tagline', 'date' ),
 		);
 	}
 
@@ -99,11 +99,16 @@ class Jetpack_SEO_Titles {
 			return $default_title;
 		}
 
-		$custom_title = array_reduce( $title_formats[ $page_type ], function ( $title, $item ) {
-			return $title .= ( 'token' === $item['type'] )
-				? self::get_token_value( $item['value'] )
-				: $item['value'];
-		}, '' );
+		$custom_title = '';
+		$format_array = $title_formats[ $page_type ];
+
+		foreach ( $format_array as $item ) {
+			if ( 'token' == $item['type'] ) {
+				$custom_title .= self::get_token_value( $item['value'] );
+			} else {
+				$custom_title .= $item['value'];
+			}
+		}
 
 		return esc_html( $custom_title );
 	}
@@ -155,7 +160,7 @@ class Jetpack_SEO_Titles {
 			return 'groups';
 		}
 
-		if ( is_archive() ) {
+		if ( is_archive() && ! is_author() ) {
 			return 'archives';
 		}
 
@@ -177,6 +182,18 @@ class Jetpack_SEO_Titles {
 	 * @return bool True if current theme sets custom title, false otherwise.
 	 */
 	public static function is_conflicted_theme() {
+		/**
+		 * Can be used to specify a list of themes that use their own custom title format.
+		 *
+		 * If current site is using one of the themes listed as conflicting,
+		 * Jetpack SEO custom title formats will be disabled.
+		 *
+		 * @module seo-tools
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param array List of conflicted theme names. Defaults to empty array.
+		 */
 		$conflicted_themes = apply_filters( 'jetpack_seo_custom_title_conflicted_themes', array() );
 
 		return isset( $conflicted_themes[ get_option( 'template' ) ] );
@@ -235,11 +252,11 @@ class Jetpack_SEO_Titles {
 	public static function update_title_formats( $new_formats ) {
 		// Empty array signals that custom title shouldn't be used.
 		$empty_formats = array(
-			'front_page' => [ ],
-			'posts'      => [ ],
-			'pages'      => [ ],
-			'groups'     => [ ],
-			'archives'   => [ ],
+			'front_page' => array(),
+			'posts'      => array(),
+			'pages'      => array(),
+			'groups'     => array(),
+			'archives'   => array(),
 		);
 
 		$previous_formats = self::get_custom_title_formats();
