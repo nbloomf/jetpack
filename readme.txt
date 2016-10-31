@@ -84,6 +84,7 @@ There are opportunities for developers at all levels to contribute. [Learn more 
 * Related Posts: add posts to the WP REST API Post Response. #3425
 * Widgets: new 'My Community' widget displaying people who recently interacted with your site. #3358
 * Widgets: new 'WordPress.org' option in the Social Media Icons Widget. #5183
+* Widgets: add new `jetpack_top_posts_widget_permalink` filter to the permalinks in Top Posts Widget. #4881
 
 **Improved Compatibility:**
 
