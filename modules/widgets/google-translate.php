@@ -28,7 +28,9 @@ class Google_Translate_Widget extends WP_Widget {
 				'customize_selective_refresh' => true
 			)
 		);
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		if ( is_active_widget( false, false, $this->id_base ) || is_active_widget( false, false, 'monster' ) || is_customize_preview() ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		}
 	}
 
 	/**
@@ -36,7 +38,9 @@ class Google_Translate_Widget extends WP_Widget {
 	 */
 	public function enqueue_scripts() {
 		wp_register_script( 'google-translate-init', plugins_url( 'google-translate/google-translate.js', __FILE__ ) );
-		wp_register_script( 'google-translate', '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit', array( 'google-translate-init' ) );
+		wp_enqueue_script( 'google-translate', '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit', array( 'google-translate-init' ) );
+		wp_localize_script( 'google-translate-init', '_wp_google_translate_widget', array( 'lang' => get_locale() ) );
+
 		// Admin bar is also displayed on top of the site which causes google translate bar to hide beneath.
 		// This is a hack to show google translate bar a bit lower.
 		wp_add_inline_style( 'admin-bar', '.goog-te-banner-frame { top:32px !important }' );
@@ -53,9 +57,6 @@ class Google_Translate_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		// We never should show more than 1 instance of this.
 		if ( null === self::$instance ) {
-			wp_localize_script( 'google-translate-init', '_wp_google_translate_widget', array( 'lang' => get_locale() ) );
-			wp_enqueue_script( 'google-translate-init' );
-			wp_enqueue_script( 'google-translate' );
 
 			/** This filter is documented in core/src/wp-includes/default-widgets.php */
 			$title = apply_filters( 'widget_title', isset( $instance['title'] ) ? $instance['title'] : '' );
@@ -75,6 +76,8 @@ class Google_Translate_Widget extends WP_Widget {
 	 * @see WP_Widget::form()
 	 *
 	 * @param array $instance Previously saved values from database.
+	 *
+	 * @return string|void
 	 */
 	public function form( $instance ) {
 		if ( isset( $instance['title'] ) ) {

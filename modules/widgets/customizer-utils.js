@@ -1,4 +1,4 @@
-/* global gapi, FB, twttr */
+/* global gapi, FB, twttr, google */
 
 /**
  * Utilities to work with widgets in Customizer.
@@ -38,6 +38,11 @@ wp.isJetpackWidgetPlaced = function( placement, widgetName ) {
 					// Refresh Google+
 					if ( wp.isJetpackWidgetPlaced( placement, 'googleplus-badge' ) && 'object' === typeof gapi && gapi.person && 'function' === typeof gapi.person.go ) {
 						gapi.person.go( placement.container[0] );
+					}
+
+					// Refresh Google Translate
+					else if ( wp.isJetpackWidgetPlaced( placement, 'google_translate_widget' ) && 'object' === typeof google && google.translate && 'function' === typeof google.translate.TranslateElement ) {
+						$( 'script[src*="cb=googleTranslateElementInit"]' ).remove().appendTo( $( 'head' ) );
 					}
 
 					// Refresh Facebook XFBML

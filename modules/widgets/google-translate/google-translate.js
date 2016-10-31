@@ -2,13 +2,9 @@
 /*global _wp_google_translate_widget:true*/
 /*exported googleTranslateElementInit*/
 function googleTranslateElementInit() {
-	var lang = 'en';
-	var langParam;
-	var langRegex = /[?&#]lang=([a-z]+)/;
-	if ( typeof _wp_google_translate_widget === 'object' && typeof _wp_google_translate_widget.lang === 'string' ) {
-		lang = _wp_google_translate_widget.lang;
-	}
-	langParam = window.location.href.match( langRegex );
+	var langRegex = /[?&#]lang=([a-z]+)/,
+	    langParam = window.location.href.match( langRegex ),
+	    lang      = 'object' === typeof _wp_google_translate_widget && 'string' === typeof _wp_google_translate_widget.lang ? _wp_google_translate_widget.lang: 'en';
 	if ( langParam ) {
 		window.location.href = window.location.href.replace( langRegex, '' ).replace( /#googtrans\([a-zA-Z|]+\)/, '' ) + '#googtrans(' + lang + '|' + langParam[ 1 ] + ')';
 	}
