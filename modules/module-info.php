@@ -562,6 +562,21 @@ function jetpack_verification_tools_more_info() {
 add_action( 'jetpack_module_more_info_verification-tools', 'jetpack_verification_tools_more_info' );
 
 /**
+ * SEO Tools
+ */
+function jetpack_seo_tools_more_link() {
+	echo 'https://support.wordpress.com/seo-tools/';
+}
+add_action( 'jetpack_learn_more_button_seo-tools', 'jetpack_seo_tools_more_link' );
+
+function jetpack_seo_tools_more_info() {
+	esc_html_e(
+		'Adds tools to enhance your site\'s content for better results on search engines and social media.'
+		, 'jetpack' );
+}
+add_action( 'jetpack_module_more_info_seo-tools', 'jetpack_seo_tools_more_info' );
+
+/**
  * Custom Content Types
  */
 function jetpack_custom_content_types_more_link() {
