@@ -22,40 +22,11 @@ class Jetpack_SEO_Utils {
 	 * @return bool True if SEO tools are enabled, false otherwise.
 	 */
 	public static function is_enabled_jetpack_seo( $site_id = 0 ) {
-		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-			if ( empty( $site_id ) ) {
-				$site_id = get_current_blog_id();
-			}
-
-			if ( function_exists( 'has_blog_sticker' ) ) {
-				return has_blog_sticker( 'unlimited-premium-themes', $site_id );
-			}
-		} else {
-			// Jetpack sites
-			if ( empty( $site_id ) ) {
-				$site_id = Jetpack_Options::get_option( 'id' );
-			}
-
-			if ( 'jetpack_business' === wp_cache_get( 'jetpack_subscription_plan' ) ) {
-				return true;
-			} else {
-				$result = Jetpack_Client::wpcom_json_api_request_as_blog( sprintf( '/sites/%d', $site_id ), '1.1' );
-
-				if ( is_wp_error( $result ) ) {
-					return false;
-				}
-
-				$response = json_decode( $result['body'], true );
-
-				if ( 'jetpack_business' === $response['plan']['product_slug'] ) {
-					wp_cache_set( 'jetpack_subscription_plan', 'jetpack_business', '', DAY_IN_SECONDS );
-
-					return true;
-				}
-			}
+		if ( function_exists( 'has_blog_sticker' ) ) {
+			return has_blog_sticker( 'unlimited-premium-themes', $site_id );
 		}
 
-		return false;
+		return true;
 	}
 
 	/**
