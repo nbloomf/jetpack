@@ -38,7 +38,7 @@ class Google_Translate_Widget extends WP_Widget {
 	 */
 	public function enqueue_scripts() {
 		wp_register_script( 'google-translate-init', plugins_url( 'google-translate/google-translate.js', __FILE__ ) );
-		wp_enqueue_script( 'google-translate', '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit', array( 'google-translate-init' ) );
+		wp_enqueue_script( 'google-translate', '//translate.google.com/translate_a/element.js?cb=jetpackGoogleTranslateInit', array( 'google-translate-init' ) );
 		wp_localize_script( 'google-translate-init', '_wp_google_translate_widget', array( 'lang' => get_locale() ) );
 
 		// Admin bar is also displayed on top of the site which causes google translate bar to hide beneath.

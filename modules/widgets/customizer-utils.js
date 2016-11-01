@@ -42,7 +42,7 @@ wp.isJetpackWidgetPlaced = function( placement, widgetName ) {
 
 					// Refresh Google Translate
 					else if ( wp.isJetpackWidgetPlaced( placement, 'google_translate_widget' ) && 'object' === typeof google && google.translate && 'function' === typeof google.translate.TranslateElement ) {
-						$( 'script[src*="cb=googleTranslateElementInit"]' ).remove().appendTo( $( 'head' ) );
+						$( 'script[src*="cb=jetpackGoogleTranslateInit"]' ).remove().appendTo( $( 'head' ) );
 					}
 
 					// Refresh Facebook XFBML

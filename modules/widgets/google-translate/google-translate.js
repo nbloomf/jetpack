@@ -1,7 +1,7 @@
 /*global google:true*/
 /*global _wp_google_translate_widget:true*/
-/*exported googleTranslateElementInit*/
-function googleTranslateElementInit() {
+/*exported jetpackGoogleTranslateInit*/
+function jetpackGoogleTranslateInit() {
 	var langRegex = /[?&#]lang=([a-z]+)/,
 	    langParam = window.location.href.match( langRegex ),
 	    lang      = 'object' === typeof _wp_google_translate_widget && 'string' === typeof _wp_google_translate_widget.lang ? _wp_google_translate_widget.lang: 'en';
