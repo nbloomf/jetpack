@@ -280,8 +280,8 @@ class Jetpack_My_Community_Widget extends WP_Widget {
  */
 function jetpack_my_community_init() {
 	if ( Jetpack::is_active() ) {
-		register_widget( 'Jetpack_My_Community_Widget' );
 	}
+		register_widget( 'Jetpack_My_Community_Widget' );
 }
 
 add_action( 'widgets_init', 'jetpack_my_community_init' );
