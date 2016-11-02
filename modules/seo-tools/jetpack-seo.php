@@ -18,7 +18,7 @@ class Jetpack_SEO {
 		 *
 		 * @param bool true Should Jetpack's SEO Meta Tags be enabled. Defaults to true.
 		 */
-		if ( apply_filters( 'jetpack_seo_meta_tags', true ) ) {
+		if ( apply_filters( 'jetpack_seo_meta_tags_enabled', true ) ) {
 			add_action( 'wp_head', array( $this, 'meta_tags' ) );
 
 			// Add support for editing page excerpts in pages, regardless of theme support.
@@ -235,6 +235,17 @@ class Jetpack_SEO {
 		if ( ! empty( $custom_title ) ) {
 			$meta['title'] = $custom_title;
 		}
+
+		/**
+		 * Can be used to edit the default SEO tools meta tags.
+		 *
+		 * @module seo-tools
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param array Array that consists of meta name and meta content pairs.
+		 */
+		$meta = apply_filters( 'jetpack_seo_meta_tags', $meta );
 
 		// Output them
 		foreach ( $meta as $name => $content ) {
