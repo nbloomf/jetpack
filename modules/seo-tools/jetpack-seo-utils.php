@@ -23,9 +23,15 @@ class Jetpack_SEO_Utils {
 	 */
 	public static function is_enabled_jetpack_seo( $site_id = 0 ) {
 		if ( function_exists( 'has_blog_sticker' ) ) {
+			// For WPCOM sites
+			if ( empty( $site_id ) ) {
+				$site_id = get_current_blog_id();
+			}
+
 			return has_blog_sticker( 'unlimited-premium-themes', $site_id );
 		}
 
+		// For all Jetpack sites
 		return true;
 	}
 
